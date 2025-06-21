@@ -1,36 +1,19 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 4Classic Upgrade Cost Simulation
 
-## Getting Started
+I made this to simulate how much it would cost to upgrade an item by myself, in
+order to compare it to buying an item already upgraded.
 
-First, run the development server:
+## How it works
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The script starts the simulation as if your item was already at +11.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then, based on 4Classic upgrading rates, it simulates upgrading attempts until
+it reaches your target level, following these rules:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Whenever the item reaches +12, +14, +16, +18, +20 or +22, a Scroll of Reflection
+is used.
+- For every attempt, it counts a Serendipity Potion and a Master's Formula.
+- For every failed attempt, it counts a Survival Tincture.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+You will input the cost of each upgrading material, to reflect the current state
+of the market.
