@@ -1,5 +1,6 @@
 "use client";
 
+import { ModeToggle } from "@/components/mode-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -126,10 +127,12 @@ export default function Home() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold tracking-tight">
+      <div className="flex justify-between space-y-4">
+        <h1 className="text-3xl font-bold tracking-tight mb-0">
           4Classic Upgrade Simulation
         </h1>
+
+        <ModeToggle />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
