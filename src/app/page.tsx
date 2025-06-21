@@ -1,5 +1,8 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { COSTS } from "@/constants/costs.constant";
 import { ITEM_COSTS } from "@/constants/item-costs.constant";
 import { RATES } from "@/constants/rates.contanst";
@@ -129,68 +132,133 @@ export default function Home() {
 
   function calcAvg(value: number): number {
     return simulations.length > 0
-      ? parseFloat((value / simulations.length).toFixed(2))
+      ? parseFloat((value / simulations.length).toFixed(0))
       : 0;
   }
 
   return (
-    <div>
-      <h1>Upgrade Simulation</h1>
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div className="text-center space-y-4">
+        <h1 className="text-3xl font-bold tracking-tight">
+          Upgrade Simulation to +20
+        </h1>
+        <Button
+          size="lg"
+          onClick={() => {
+            for (let i = 0; i < 1000; i++) {
+              handleRun();
+            }
+          }}
+          className="px-8 py-3"
+        >
+          RUN 1000 SIMULATIONS
+        </Button>
+      </div>
 
-      <button
-        type="button"
-        onClick={() => {
-          for (let i = 0; i < 1000; i++) {
-            handleRun();
-          }
-        }}
-      >
-        RUN 1000 SIMULATIONS
-      </button>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              Average Items Used
+              <Badge variant="secondary">Per Simulation</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Survival Tincture</span>
+              <Badge variant="outline">
+                {calcAvg(totals.itemsUsed.survivalTincture)}
+              </Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Serendipity Potion</span>
+              <Badge variant="outline">
+                {calcAvg(totals.itemsUsed.serendipityPotion)}
+              </Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Master&apos;s Formula</span>
+              <Badge variant="outline">
+                {calcAvg(totals.itemsUsed.mastersFormula)}
+              </Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Scroll of Reflection</span>
+              <Badge variant="outline">
+                {calcAvg(totals.itemsUsed.scrollOfReflection)}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
 
-      <h2>Average items used</h2>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              Average Costs per Item
+              <Badge variant="secondary">Silver</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Survival Tincture</span>
+              <Badge variant="outline">
+                {calcAvg(totals.costs.survivalTincture).toLocaleString()}
+              </Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Serendipity Potion</span>
+              <Badge variant="outline">
+                {calcAvg(totals.costs.serendipityPotion).toLocaleString()}
+              </Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Master&apos;s Formula</span>
+              <Badge variant="outline">
+                {calcAvg(totals.costs.mastersFormula).toLocaleString()}
+              </Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Scroll of Reflection</span>
+              <Badge variant="outline">
+                {calcAvg(totals.costs.scrollOfReflection).toLocaleString()}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
 
-      <ul>
-        <li>Survival Tincture: {calcAvg(totals.itemsUsed.survivalTincture)}</li>
-        <li>
-          Serendipity Potion: {calcAvg(totals.itemsUsed.serendipityPotion)}
-        </li>
-        <li>
-          Master&apos;s Formula: {calcAvg(totals.itemsUsed.mastersFormula)}
-        </li>
-        <li>
-          Scroll of Reflection: {calcAvg(totals.itemsUsed.scrollOfReflection)}
-        </li>
-      </ul>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              Average Blacksmith tax Costs
+              <Badge variant="secondary">Silver</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Blacksmith tax</span>
+              <Badge variant="outline">
+                {calcAvg(totals.upgradeCost).toLocaleString()}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-      <h2>Average costs per item</h2>
-
-      <ul>
-        <li>
-          Survival Tincture:{" "}
-          {calcAvg(totals.costs.survivalTincture).toLocaleString()}
-        </li>
-        <li>
-          Serendipity Potion:{" "}
-          {calcAvg(totals.costs.serendipityPotion).toLocaleString()}
-        </li>
-        <li>
-          Master&apos;s Formula:{" "}
-          {calcAvg(totals.costs.mastersFormula).toLocaleString()}
-        </li>
-        <li>
-          Scroll of Reflection:{" "}
-          {calcAvg(totals.costs.scrollOfReflection).toLocaleString()}
-        </li>
-      </ul>
-
-      <h2>Average upgrade cost</h2>
-
-      <p>{calcAvg(totals.upgradeCost).toLocaleString()}</p>
-
-      <h2>Average final cost</h2>
-
-      <p>{calcAvg(totals.sumOfCosts).toLocaleString()}</p>
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-6 text-center">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-center gap-2">
+              Average Final Cost
+              <Badge variant="secondary">Silver</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-primary">
+              {calcAvg(totals.sumOfCosts).toLocaleString()}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
