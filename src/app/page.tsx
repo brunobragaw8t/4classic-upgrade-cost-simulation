@@ -104,7 +104,7 @@ export default function Home() {
       serendipityPotion: 0,
       mastersFormula: 0,
       scrollOfReflection: 0,
-    }
+    },
   );
 
   const total = {
@@ -184,7 +184,7 @@ export default function Home() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="mastersFormula">Master's Formula</Label>
+                <Label htmlFor="mastersFormula">Master&apos;s Formula</Label>
                 <Input
                   id="mastersFormula"
                   type="number"
