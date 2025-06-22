@@ -167,6 +167,7 @@ export default function Home() {
                   id="survivalTincture"
                   type="number"
                   min="0"
+                  step="0.001"
                   value={survivalTincturePrice}
                   onChange={(e) =>
                     setSurvivalTincturePrice(Number(e.target.value))
@@ -180,6 +181,7 @@ export default function Home() {
                   id="serendipityPotion"
                   type="number"
                   min="0"
+                  step="0.001"
                   value={serendipityPotionPrice}
                   onChange={(e) =>
                     setSerendipityPotionPrice(Number(e.target.value))
@@ -193,6 +195,7 @@ export default function Home() {
                   id="mastersFormula"
                   type="number"
                   min="0"
+                  step="0.001"
                   value={mastersFormulaPrice}
                   onChange={(e) =>
                     setMastersFormulaPrice(Number(e.target.value))
@@ -206,6 +209,7 @@ export default function Home() {
                   id="scrollOfReflection"
                   type="number"
                   min="0"
+                  step="0.001"
                   value={scrollOfReflectionPrice}
                   onChange={(e) =>
                     setScrollOfReflectionPrice(Number(e.target.value))
