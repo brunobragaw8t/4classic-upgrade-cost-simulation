@@ -7,34 +7,74 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BLACKSMITH_TAX } from "@/constants/blacksmith-tax.constant";
-import { ITEM_LEVEL, RATES } from "@/constants/rates.contanst";
+import { ITEM_LEVEL, ITEM_LEVELS, RATES } from "@/constants/rates.contanst";
 import { getRandomNumber } from "@/utils/get-random-number";
 import { formatPrice } from "@/utils/format-price";
 import { useState } from "react";
-import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Simulation = {
   itemsUsed: {
     survivalTincture: number;
-    serendipityPotion: number;
+    serendipityPotion100: number;
+    serendipityPotion150: number;
+    serendipityPotion200: number;
+    serendipityPotion300: number;
     mastersFormula: number;
     scrollOfReflection: number;
   };
   blacksmithTax: number;
-  finalLevel: ITEM_LEVEL;
 };
 
 export default function Home() {
   const [targetLevel, setTargetLevel] = useState(20);
 
-  const [survivalTincturePrice, setSurvivalTincturePrice] = useState(250);
-  const [serendipityPotionPrice, setSerendipityPotionPrice] = useState(0.7);
-  const [mastersFormulaPrice, setMastersFormulaPrice] = useState(0.8);
+  const [survivalTincturePrice, setSurvivalTincturePrice] = useState(213);
+  const [serendipityPotion100Price, setSerendipityPotion100Price] =
+    useState(0.731);
+  const [serendipityPotion150Price, setSerendipityPotion150Price] =
+    useState(1687);
+  const [serendipityPotion200Price, setSerendipityPotion200Price] =
+    useState(17388);
+  const [serendipityPotion300Price, setSerendipityPotion300Price] =
+    useState(229333);
+  const [mastersFormulaPrice, setMastersFormulaPrice] = useState(0.83);
   const [scrollOfReflectionPrice, setScrollOfReflectionPrice] = useState(20);
 
-  const [reflectionLevels, setReflectionLevels] = useState<number[]>([
-    12, 14, 16, 18, 20, 22,
-  ]);
+  const [actions, setActions] = useState<
+    Record<ITEM_LEVEL, -1 | 2 | 2.5 | 3 | 4>
+  >({
+    11: 2,
+    12: -1,
+    13: 2,
+    14: -1,
+    15: 2,
+    16: -1,
+    17: 2,
+    18: 2,
+    19: 2,
+    20: 2,
+    21: 2,
+    22: 2,
+    23: 2,
+  });
+
+  function handleActionChange(level: ITEM_LEVEL, value: string) {
+    const numericValue = parseFloat(value) as -1 | 2 | 2.5 | 3 | 4;
+
+    setActions((prev) => ({
+      ...prev,
+      [level]: numericValue,
+    }));
+  }
 
   const [simulations, setSimulations] = useState<Simulation[]>([]);
 
@@ -44,26 +84,50 @@ export default function Home() {
     const res: Simulation = {
       itemsUsed: {
         survivalTincture: 1,
-        serendipityPotion: 0,
+        serendipityPotion100: 0,
+        serendipityPotion150: 0,
+        serendipityPotion200: 0,
+        serendipityPotion300: 0,
         mastersFormula: 0,
         scrollOfReflection: 0,
       },
       blacksmithTax: 0,
-      finalLevel: currentLevel,
     };
 
     while (currentLevel < targetLevel) {
-      if (reflectionLevels.includes(currentLevel)) {
+      // Ensure type-safety because of manipulating currentLevel
+      currentLevel = currentLevel as ITEM_LEVEL;
+
+      const action = actions[currentLevel];
+
+      if (action === -1) {
         res.itemsUsed.scrollOfReflection += 1;
         currentLevel -= 1;
         continue;
       }
 
-      res.itemsUsed.serendipityPotion += 1;
       res.itemsUsed.mastersFormula += 1;
-      res.blacksmithTax += BLACKSMITH_TAX[currentLevel as ITEM_LEVEL];
+      res.blacksmithTax += BLACKSMITH_TAX[currentLevel];
 
-      const successRate = RATES[currentLevel as ITEM_LEVEL];
+      const successRate = RATES[currentLevel] * action;
+
+      switch (action) {
+        case 2:
+          res.itemsUsed.serendipityPotion100 += 1;
+          break;
+
+        case 2.5:
+          res.itemsUsed.serendipityPotion150 += 1;
+          break;
+
+        case 3:
+          res.itemsUsed.serendipityPotion200 += 1;
+          break;
+
+        case 4:
+          res.itemsUsed.serendipityPotion300 += 1;
+          break;
+      }
 
       const success = Math.random() < successRate;
 
@@ -75,8 +139,6 @@ export default function Home() {
         res.itemsUsed.survivalTincture += 1;
       }
     }
-
-    res.finalLevel = currentLevel as ITEM_LEVEL;
 
     return res;
   }
@@ -95,10 +157,15 @@ export default function Home() {
     setSimulations([]);
   }
 
-  const totalItemsUsed = simulations.reduce(
+  const totalItemsUsed = simulations.reduce<
+    Record<keyof Simulation["itemsUsed"], number>
+  >(
     (acc, sim) => {
       acc.survivalTincture += sim.itemsUsed.survivalTincture;
-      acc.serendipityPotion += sim.itemsUsed.serendipityPotion;
+      acc.serendipityPotion100 += sim.itemsUsed.serendipityPotion100;
+      acc.serendipityPotion150 += sim.itemsUsed.serendipityPotion150;
+      acc.serendipityPotion200 += sim.itemsUsed.serendipityPotion200;
+      acc.serendipityPotion300 += sim.itemsUsed.serendipityPotion300;
       acc.mastersFormula += sim.itemsUsed.mastersFormula;
       acc.scrollOfReflection += sim.itemsUsed.scrollOfReflection;
 
@@ -106,16 +173,25 @@ export default function Home() {
     },
     {
       survivalTincture: 0,
-      serendipityPotion: 0,
+      serendipityPotion100: 0,
+      serendipityPotion150: 0,
+      serendipityPotion200: 0,
+      serendipityPotion300: 0,
       mastersFormula: 0,
       scrollOfReflection: 0,
-    },
+    }
   );
 
   const total = {
     survivalTincture: totalItemsUsed.survivalTincture * survivalTincturePrice,
-    serendipityPotion:
-      totalItemsUsed.serendipityPotion * serendipityPotionPrice,
+    serendipityPotion100:
+      totalItemsUsed.serendipityPotion100 * serendipityPotion100Price,
+    serendipityPotion150:
+      totalItemsUsed.serendipityPotion150 * serendipityPotion150Price,
+    serendipityPotion200:
+      totalItemsUsed.serendipityPotion200 * serendipityPotion200Price,
+    serendipityPotion300:
+      totalItemsUsed.serendipityPotion300 * serendipityPotion300Price,
     mastersFormula: totalItemsUsed.mastersFormula * mastersFormulaPrice,
     scrollOfReflection:
       totalItemsUsed.scrollOfReflection * scrollOfReflectionPrice,
@@ -165,7 +241,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="survivalTincture">Survival Tincture</Label>
                 <Input
@@ -181,15 +257,69 @@ export default function Home() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="serendipityPotion">Serendipity Potion</Label>
+                <Label htmlFor="serendipityPotion100">
+                  Seren. Potion (100 %)
+                </Label>
+
                 <Input
-                  id="serendipityPotion"
+                  id="serendipityPotion100"
                   type="number"
                   min="0"
                   step="0.001"
-                  value={serendipityPotionPrice}
+                  value={serendipityPotion100Price}
                   onChange={(e) =>
-                    setSerendipityPotionPrice(Number(e.target.value))
+                    setSerendipityPotion100Price(Number(e.target.value))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="serendipityPotion150">
+                  Seren. Potion (150 %)
+                </Label>
+
+                <Input
+                  id="serendipityPotion150"
+                  type="number"
+                  min="0"
+                  step="0.001"
+                  value={serendipityPotion150Price}
+                  onChange={(e) =>
+                    setSerendipityPotion150Price(Number(e.target.value))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="serendipityPotion200">
+                  Seren. Potion (200 %)
+                </Label>
+
+                <Input
+                  id="serendipityPotion200"
+                  type="number"
+                  min="0"
+                  step="0.001"
+                  value={serendipityPotion200Price}
+                  onChange={(e) =>
+                    setSerendipityPotion200Price(Number(e.target.value))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="serendipityPotion300">
+                  Seren. Potion (300 %)
+                </Label>
+
+                <Input
+                  id="serendipityPotion300"
+                  type="number"
+                  min="0"
+                  step="0.001"
+                  value={serendipityPotion300Price}
+                  onChange={(e) =>
+                    setSerendipityPotion300Price(Number(e.target.value))
                   }
                 />
               </div>
@@ -222,91 +352,95 @@ export default function Home() {
                 />
               </div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="scrollOfReflection">Reflection levels</Label>
-
-              <div className="grid grid-cols-3 gap-4">
-                {[12, 14, 16, 18, 20, 22].map((level) => (
-                  <div className="flex items-center space-x-2" key={level}>
-                    <Switch
-                      checked={reflectionLevels.includes(level)}
-                      onCheckedChange={() => {
-                        setReflectionLevels((prev) => {
-                          return (
-                            prev.includes(level)
-                              ? prev.filter((x) => x !== level)
-                              : [...prev, level]
-                          ).toSorted();
-                        });
-                      }}
-                    />
-
-                    <Label>+{level}</Label>
-                  </div>
-                ))}
-              </div>
-            </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Simulation Controls</CardTitle>
+            <CardTitle>Action configuration</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">
-                Current simulations:{" "}
-                <Badge variant="secondary">{simulations.length}</Badge>
-              </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {ITEM_LEVELS.map((n) => (
+                <div className="flex gap-2 items-center space-y-2">
+                  <Label className="mb-0">+{n}</Label>
 
-              <p className="text-sm text-muted-foreground">
-                Target level: <Badge variant="outline">+{targetLevel}</Badge>
-              </p>
+                  <Select
+                    value={actions[n].toString()}
+                    onValueChange={(value) => handleActionChange(n, value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a fruit" />
+                    </SelectTrigger>
 
-              <p className="text-sm text-muted-foreground">
-                Reflection levels:{" "}
-                <Badge variant="outline">
-                  {reflectionLevels.map((i) => `+${i}`).join(", ")}
-                </Badge>
-              </p>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>+{n}</SelectLabel>
+                        <SelectItem value="-1">Reflection</SelectItem>
+                        <SelectItem value="2">Pot. 100 %</SelectItem>
+                        <SelectItem value="2.5">Pot. 150 %</SelectItem>
+                        <SelectItem value="3">Pot. 200 %</SelectItem>
+                        <SelectItem value="4">Pot. 300 %</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
             </div>
-
-            <div className="space-y-3">
-              <p className="text-sm font-medium">Run simulations:</p>
-
-              <div className="grid grid-cols-2 gap-2">
-                <Button onClick={() => handleRuns(1)} variant="outline">
-                  1
-                </Button>
-
-                <Button onClick={() => handleRuns(10)} variant="outline">
-                  10
-                </Button>
-
-                <Button onClick={() => handleRuns(100)} variant="outline">
-                  100
-                </Button>
-
-                <Button onClick={() => handleRuns(1000)} variant="outline">
-                  1000
-                </Button>
-              </div>
-            </div>
-
-            <Button
-              onClick={clearSimulations}
-              variant="destructive"
-              className="w-full"
-              disabled={simulations.length === 0}
-            >
-              Clear simulations
-            </Button>
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Simulation Controls</CardTitle>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">
+              Current simulations:{" "}
+              <Badge variant="secondary">{simulations.length}</Badge>
+            </p>
+
+            <p className="text-sm text-muted-foreground">
+              Target level: <Badge variant="outline">+{targetLevel}</Badge>
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-sm font-medium">Run simulations:</p>
+
+            <div className="grid grid-cols-2 gap-2">
+              <Button onClick={() => handleRuns(1)} variant="outline">
+                1
+              </Button>
+
+              <Button onClick={() => handleRuns(10)} variant="outline">
+                10
+              </Button>
+
+              <Button onClick={() => handleRuns(100)} variant="outline">
+                100
+              </Button>
+
+              <Button onClick={() => handleRuns(1000)} variant="outline">
+                1000
+              </Button>
+            </div>
+          </div>
+
+          <Button
+            onClick={clearSimulations}
+            variant="destructive"
+            className="w-full"
+            disabled={simulations.length === 0}
+          >
+            Clear simulations
+          </Button>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
@@ -323,9 +457,42 @@ export default function Home() {
             </div>
 
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Serendipity Potion</span>
+              <span className="text-sm font-medium">
+                Serendipity Potion (100 %)
+              </span>
+
               <Badge variant="outline">
-                {calcAvg(totalItemsUsed.serendipityPotion)}
+                {calcAvg(totalItemsUsed.serendipityPotion100)}
+              </Badge>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">
+                Serendipity Potion (150 %)
+              </span>
+
+              <Badge variant="outline">
+                {calcAvg(totalItemsUsed.serendipityPotion150)}
+              </Badge>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">
+                Serendipity Potion (200 %)
+              </span>
+
+              <Badge variant="outline">
+                {calcAvg(totalItemsUsed.serendipityPotion200)}
+              </Badge>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">
+                Serendipity Potion (300 %)
+              </span>
+
+              <Badge variant="outline">
+                {calcAvg(totalItemsUsed.serendipityPotion300)}
               </Badge>
             </div>
 
@@ -357,10 +524,40 @@ export default function Home() {
                 {formatPrice(calcAvg(total.survivalTincture))}
               </Badge>
             </div>
+
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Serendipity Potion</span>
+              <span className="text-sm font-medium">
+                Serendipity Potion (100 %)
+              </span>
               <Badge variant="outline">
-                {formatPrice(calcAvg(total.serendipityPotion))}
+                {formatPrice(calcAvg(total.serendipityPotion100))}
+              </Badge>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">
+                Serendipity Potion (150 %)
+              </span>
+              <Badge variant="outline">
+                {formatPrice(calcAvg(total.serendipityPotion150))}
+              </Badge>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">
+                Serendipity Potion (200 %)
+              </span>
+              <Badge variant="outline">
+                {formatPrice(calcAvg(total.serendipityPotion200))}
+              </Badge>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">
+                Serendipity Potion (300 %)
+              </span>
+              <Badge variant="outline">
+                {formatPrice(calcAvg(total.serendipityPotion300))}
               </Badge>
             </div>
 
