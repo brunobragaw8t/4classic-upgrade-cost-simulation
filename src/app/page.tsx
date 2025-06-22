@@ -145,15 +145,19 @@ export default function Home() {
             <div className="space-y-2">
               <Label htmlFor="targetLevel">Target Level</Label>
 
-              <Input
-                id="targetLevel"
-                type="number"
-                min="12"
-                max="25"
-                value={targetLevel}
-                onChange={(e) => setTargetLevel(Number(e.target.value))}
-                className="w-full"
-              />
+              <div className="flex w-full max-w-sm items-center gap-2">
+                <span className="text-sm text-muted-foreground">+</span>
+
+                <Input
+                  id="targetLevel"
+                  type="number"
+                  min="12"
+                  max="25"
+                  value={targetLevel}
+                  onChange={(e) => setTargetLevel(Number(e.target.value))}
+                  className="w-full"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
