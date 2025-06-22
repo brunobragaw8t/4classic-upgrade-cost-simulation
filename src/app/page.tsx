@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { COSTS } from "@/constants/costs.constant";
 import { ITEM_LEVEL, RATES } from "@/constants/rates.contanst";
 import { getRandomNumber } from "@/utils/get-random-number";
-import { formatPrice, numberFormat } from "@/utils/number-format";
+import { formatPrice } from "@/utils/number-format";
 import { useState } from "react";
 
 type Simulation = {
