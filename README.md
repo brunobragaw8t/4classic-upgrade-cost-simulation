@@ -10,8 +10,8 @@ The script starts the simulation as if your item was already at +11.
 Then, based on 4Classic upgrading rates, it simulates upgrading attempts until
 it reaches your target level, following these rules:
 
-- Whenever the item reaches +12, +14, +16, +18, +20 or +22, a Scroll of Reflection
-is used.
+- When the item reaches +12, +14, +16, +18, +20 or +22, a Scroll of Reflection
+can be used (user's choice).
 - For every attempt, it counts a Serendipity Potion and a Master's Formula.
 - For every failed attempt, it counts a Survival Tincture.
 
