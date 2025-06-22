@@ -11,6 +11,7 @@ import { ITEM_LEVEL, RATES } from "@/constants/rates.contanst";
 import { getRandomNumber } from "@/utils/get-random-number";
 import { formatPrice } from "@/utils/format-price";
 import { useState } from "react";
+import { Switch } from "@/components/ui/switch";
 
 type Simulation = {
   itemsUsed: {
@@ -31,6 +32,10 @@ export default function Home() {
   const [mastersFormulaPrice, setMastersFormulaPrice] = useState(0.8);
   const [scrollOfReflectionPrice, setScrollOfReflectionPrice] = useState(20);
 
+  const [reflectionLevels, setReflectionLevels] = useState<number[]>([
+    12, 14, 16, 18, 20, 22,
+  ]);
+
   const [simulations, setSimulations] = useState<Simulation[]>([]);
 
   function runSimulation(): Simulation {
@@ -48,7 +53,7 @@ export default function Home() {
     };
 
     while (currentLevel < targetLevel) {
-      if ([12, 14, 16, 18, 20, 22].includes(currentLevel)) {
+      if (reflectionLevels.includes(currentLevel)) {
         res.itemsUsed.scrollOfReflection += 1;
         currentLevel -= 1;
         continue;
@@ -217,6 +222,31 @@ export default function Home() {
                 />
               </div>
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="scrollOfReflection">Reflection levels</Label>
+
+              <div className="grid grid-cols-3 gap-4">
+                {[12, 14, 16, 18, 20, 22].map((level) => (
+                  <div className="flex items-center space-x-2" key={level}>
+                    <Switch
+                      checked={reflectionLevels.includes(level)}
+                      onCheckedChange={() => {
+                        setReflectionLevels((prev) => {
+                          return (
+                            prev.includes(level)
+                              ? prev.filter((x) => x !== level)
+                              : [...prev, level]
+                          ).toSorted();
+                        });
+                      }}
+                    />
+
+                    <Label>+{level}</Label>
+                  </div>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -234,6 +264,13 @@ export default function Home() {
 
               <p className="text-sm text-muted-foreground">
                 Target level: <Badge variant="outline">+{targetLevel}</Badge>
+              </p>
+
+              <p className="text-sm text-muted-foreground">
+                Reflection levels:{" "}
+                <Badge variant="outline">
+                  {reflectionLevels.map((i) => `+${i}`).join(", ")}
+                </Badge>
               </p>
             </div>
 
