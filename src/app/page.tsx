@@ -24,12 +24,12 @@ type Simulation = {
 };
 
 export default function Home() {
-  const [targetLevel, setTargetLevel] = useState(0);
+  const [targetLevel, setTargetLevel] = useState(20);
 
-  const [survivalTincturePrice, setSurvivalTincturePrice] = useState(0);
-  const [serendipityPotionPrice, setSerendipityPotionPrice] = useState(0);
-  const [mastersFormulaPrice, setMastersFormulaPrice] = useState(0);
-  const [scrollOfReflectionPrice, setScrollOfReflectionPrice] = useState(0);
+  const [survivalTincturePrice, setSurvivalTincturePrice] = useState(250);
+  const [serendipityPotionPrice, setSerendipityPotionPrice] = useState(0.7);
+  const [mastersFormulaPrice, setMastersFormulaPrice] = useState(0.8);
+  const [scrollOfReflectionPrice, setScrollOfReflectionPrice] = useState(20);
 
   const [simulations, setSimulations] = useState<Simulation[]>([]);
 
