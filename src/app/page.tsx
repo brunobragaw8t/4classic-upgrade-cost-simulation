@@ -363,7 +363,10 @@ export default function Home() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {ITEM_LEVELS.map((n) => (
-                <div className="flex gap-2 items-center space-y-2">
+                <div
+                  className="flex gap-2 items-center space-y-2"
+                  key={`action${n}`}
+                >
                   <Label className="mb-0">+{n}</Label>
 
                   <Select
