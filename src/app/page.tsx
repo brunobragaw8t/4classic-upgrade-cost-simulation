@@ -152,7 +152,7 @@ export default function Home() {
                   id="targetLevel"
                   type="number"
                   min="12"
-                  max="25"
+                  max="24"
                   value={targetLevel}
                   onChange={(e) => setTargetLevel(Number(e.target.value))}
                   className="w-full"
