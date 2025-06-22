@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { BLACKSMITH_TAX } from "@/constants/blacksmith-tax.constant";
 import { ITEM_LEVEL, RATES } from "@/constants/rates.contanst";
 import { getRandomNumber } from "@/utils/get-random-number";
-import { formatPrice } from "@/utils/number-format";
+import { formatPrice } from "@/utils/format-price";
 import { useState } from "react";
 
 type Simulation = {
