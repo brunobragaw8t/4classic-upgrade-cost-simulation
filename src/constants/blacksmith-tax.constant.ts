@@ -14,5 +14,4 @@ export const BLACKSMITH_TAX: Record<ITEM_LEVEL, number> = {
   21: 1000,
   22: 1000,
   23: 1000,
-  24: 1000,
 };
