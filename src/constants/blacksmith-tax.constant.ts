@@ -1,6 +1,6 @@
 import { ITEM_LEVEL } from "./rates.contanst";
 
-export const COSTS: Record<ITEM_LEVEL, number> = {
+export const BLACKSMITH_TAX: Record<ITEM_LEVEL, number> = {
   11: 10,
   12: 10,
   13: 10,

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { COSTS } from "@/constants/costs.constant";
+import { BLACKSMITH_TAX } from "@/constants/blacksmith-tax.constant";
 import { ITEM_LEVEL, RATES } from "@/constants/rates.contanst";
 import { getRandomNumber } from "@/utils/get-random-number";
 import { formatPrice } from "@/utils/number-format";
@@ -56,7 +56,7 @@ export default function Home() {
 
       res.itemsUsed.serendipityPotion += 1;
       res.itemsUsed.mastersFormula += 1;
-      res.blacksmithTax += COSTS[currentLevel as ITEM_LEVEL];
+      res.blacksmithTax += BLACKSMITH_TAX[currentLevel as ITEM_LEVEL];
 
       const successRate = RATES[currentLevel as ITEM_LEVEL];
 
