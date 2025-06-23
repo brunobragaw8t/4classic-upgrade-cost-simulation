@@ -20,6 +20,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type Simulation = {
   itemsUsed: {
@@ -179,7 +184,7 @@ export default function Home() {
       serendipityPotion300: 0,
       mastersFormula: 0,
       scrollOfReflection: 0,
-    }
+    },
   );
 
   const total = {
@@ -603,6 +608,24 @@ export default function Home() {
             </p>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="text-center py-6 border-t">
+        <p className="text-sm text-muted-foreground">
+          Made with{" "}
+          <Tooltip>
+            <TooltipTrigger>❤️</TooltipTrigger>
+            <TooltipContent>passion!</TooltipContent>
+          </Tooltip>{" "}
+          by{" "}
+          <a
+            href="https://github.com/brunobragaw8t"
+            target="_blank"
+            className="text-primary hover:underline font-medium"
+          >
+            White8Tiger
+          </a>
+        </p>
       </div>
     </div>
   );
