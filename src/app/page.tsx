@@ -208,7 +208,7 @@ export default function Home() {
   function calcAvg(value: number): number {
     if (simulations.length === 0) return 0;
 
-    return Number((value / simulations.length).toFixed(0));
+    return Number((value / simulations.length).toFixed(3));
   }
 
   return (
