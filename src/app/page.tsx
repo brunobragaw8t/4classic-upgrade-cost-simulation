@@ -602,10 +602,25 @@ export default function Home() {
             <p className="text-3xl font-bold text-primary">
               {formatPrice(calcAvg(sum))}
             </p>
+
             <p className="text-sm text-muted-foreground mt-2">
               Based on {simulations.length} simulation
               {simulations.length !== 1 ? "s" : ""}
             </p>
+
+            <div className="mt-4 flex items-center justify-center text-muted-foreground text-xs">
+              <Tooltip>
+                <TooltipTrigger className="cursor-help underline decoration-dotted underline-offset-2">
+                  **Disclaimer**
+                </TooltipTrigger>
+
+                <TooltipContent className="max-w-xs text-center">
+                  This calculation does not include the cost of crafting
+                  materials or refining, focusing solely on the listed upgrade
+                  consumables and blacksmith fees.
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </CardContent>
         </Card>
       </div>
